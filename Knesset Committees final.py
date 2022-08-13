@@ -50,7 +50,6 @@ def name_list_f(f_file, titles):
 
 # running the function on a list of files and titles  and write all the dicts on a list (each object in the list is dict with 3 keys: file, tittle, list of names/lines)
 for file in files:
-    print(file)
     all_lists.append(name_list_f(file, titles))
 print ('The end')
 
