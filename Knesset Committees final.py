@@ -1,5 +1,5 @@
 #create list of local files
-files_list2 = open("urls.txt", "r")
+files_list2 = open("downloads/urls.txt", "r")
 
 files = []
 for line in files_list2:
