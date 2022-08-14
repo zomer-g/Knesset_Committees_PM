@@ -1,3 +1,9 @@
+#In order to run the code, you need to download from KNESSET ODATA the table that includes the names of the protocol files (DOC)
+#The list is here http://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_DocumentCommitteeSession
+
+#After downloading the relevant files locally, create a text file that containing the file names (or the file names with the server address as write in the ODATA file) called urls.txt.
+#The output is a CSV file PM_protocol.csv that includes the names of the protocols. In addition, a CSV called unique_PM.csv of all the names of the PMs in all the protocols (unique).
+
 #create list of local files
 files_list2 = open("urls.txt", "r")
 
@@ -61,18 +67,30 @@ for file in files:
 
     all_lists += name_list_f(file, titles)
 
-
+#export the list of protocols with the names of the PM
 import csv
 
 to_csv = all_lists
 
 keys = to_csv[0].keys()
 
-with open('PM_protocol_final.csv', 'w', newline='', encoding='utf-8') as output_file:
+with open('PM_protocol.csv', 'w', newline='', encoding='utf-8') as output_file:
     dict_writer = csv.DictWriter(output_file, keys)
     dict_writer.writeheader()
     dict_writer.writerows(to_csv)
     output_file.close()
+
+#Export the names of Knesset members (unique)
+list_U_PM=[]
+for i in all_lists:
+    for j in i['names']:
+        if j is not list_U_PM:
+            list_U_PM.append(j)
+
+with open('unique_PM.csv', 'w', encoding='utf-8') as output_file2:
+    writer = csv.writer(output_file2)
+    for val in list_U_PM:
+        writer.writerow([val])
 
 
 
