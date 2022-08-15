@@ -2,7 +2,8 @@
 #The list is here http://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_DocumentCommitteeSession
 
 #After downloading the relevant files locally, create a text file that containing the file names (or the file names with the server address as write in the ODATA file) called urls.txt.
-#The output is a CSV file PM_protocol.csv that includes the names of the protocols. In addition, a CSV called unique_PM.csv of all the names of the PMs in all the protocols (unique).
+#The output is a CSV file PM_protocol.csv that includes the names of all the PMs for each protocol. Also, a CSV called P_to_p.csv that does not include a list, making it easier to analyze with Google Sheets.
+
 
 #create list of local files
 files_list2 = open("urls.txt", "r")
@@ -14,10 +15,6 @@ for line in files_list2:
 
 files_list2.close()
 
-
-
-
-#print(files)
 
 from docx import Document
 
@@ -67,7 +64,7 @@ for file in files:
 
     all_lists += name_list_f(file, titles)
 
-#export the list of protocols with the names of the PM
+#export the list of protocols with the names of the PM as a list
 import csv
 
 to_csv = all_lists
@@ -80,20 +77,23 @@ with open('PM_protocol.csv', 'w', newline='', encoding='utf-8') as output_file:
     dict_writer.writerows(to_csv)
     output_file.close()
 
-#Export the names of Knesset members (unique)
-list_U_PM=[]
+#Convert the list of the names to new lines so it easier to analyze with Google Sheets.
+P_to_p=[]
 for i in all_lists:
     for j in i['names']:
-        if j is not list_U_PM:
-            list_U_PM.append(j)
+        PM_to_protocol = {}
+        #print(j)
+        #print(i['file'])
+        PM_to_protocol['file']=i['file']
+        PM_to_protocol['title'] = i['title']
+        PM_to_protocol['name'] = j
+        P_to_p.append(PM_to_protocol)
 
-with open('unique_PM.csv', 'w', encoding='utf-8') as output_file2:
-    writer = csv.writer(output_file2)
-    for val in list_U_PM:
-        writer.writerow([val])
+keys = P_to_p[0].keys()
 
-
-
-
-
+with open('P_to_p.csv', 'w', newline='', encoding='utf-8') as output_file3:
+    dict_writer = csv.DictWriter(output_file3, keys)
+    dict_writer.writeheader()
+    dict_writer.writerows(P_to_p)
+    output_file3.close()
 
